@@ -4,11 +4,13 @@ class CategoryGridItem extends StatelessWidget {
   final String title;
   final Color color;
   final VoidCallback onSelectCategory;
+  final int mealCount;
 
   const CategoryGridItem({
     required this.title,
     required this.color,
     required this.onSelectCategory,
+    required this.mealCount,
     super.key,
   });
 
@@ -16,7 +18,7 @@ class CategoryGridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onSelectCategory,
-      splashColor: Theme.of(context).colorScheme.secondary,
+      splashColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(15),
       child: Container(
         padding: const EdgeInsets.all(15),
@@ -30,23 +32,19 @@ class CategoryGridItem extends StatelessWidget {
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(15),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black26,
-              offset: Offset(0, 2),
-              blurRadius: 6,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              '($mealCount)',
             ),
           ],
-        ),
-        child: Center(
-          child: Text(
-            title,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-            textAlign: TextAlign.center,
-          ),
         ),
       ),
     );
