@@ -1,25 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/models/meal.dart';
+import 'package:meals_app/providers/favorites_provider.dart';
 
-class MealsDetails extends StatelessWidget {
+class MealsDetails extends ConsumerWidget {
   const MealsDetails({
     super.key,
     required this.meal,
-    required this.onToggleFavorite,
   });
 
   final Meal meal;
-  final void Function(Meal meal) onToggleFavorite;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favoriteMeals = ref.watch(favoritesProvider);
+    final isFavorite = favoriteMeals.contains(meal);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(meal.title),
         actions: [
           IconButton(
-            icon: const Icon(Icons.favorite_outline_rounded),
-            onPressed: () => onToggleFavorite(meal),
+            icon: Icon(
+              isFavorite ? Icons.favorite : Icons.favorite_border,
+            ),
+            onPressed: () {
+              final wasAdded =
+                  ref.read(favoritesProvider.notifier).toggleFavorite(meal);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    wasAdded
+                        ? 'Added to favorites!'
+                        : 'Removed from favorites!',
+                  ),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -94,7 +112,8 @@ class MealsDetails extends StatelessWidget {
                       .map((step) => Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 5),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
                                 child: Text(
                                   step,
                                   style: const TextStyle(
@@ -103,7 +122,8 @@ class MealsDetails extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              const Divider(color: Color.fromARGB(255, 188, 179, 179)),
+                              const Divider(
+                                  color: Color.fromARGB(255, 188, 179, 179)),
                             ],
                           ))
                       .toList(),
