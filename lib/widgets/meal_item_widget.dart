@@ -34,12 +34,15 @@ class MealItemWidget extends StatelessWidget {
         onTap: () => selectMeal(context),
         child: Stack(
           children: [
+            Hero(
+            tag: meal.id, 
+            child:
             Image.asset(
               meal.imageUrl,
               fit: BoxFit.cover,
               width: double.infinity,
               height: 250,
-            ),
+            ),),
             Positioned(
               bottom: 0,
               left: 0,
